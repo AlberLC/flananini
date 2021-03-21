@@ -1,0 +1,6 @@
+pyaes==1.6.1
+pyasn1==0.4.8
+PySide2==5.15.2
+rsa==4.7.2
+shiboken2==5.15.2
+Telethon==1.21.1
