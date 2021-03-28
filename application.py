@@ -142,6 +142,7 @@ class App(QtWidgets.QApplication):
             return dialog.textValue()
 
         try:
+            self.conected_with_email = False
             self._get_emails()
             self.timer_get_new_emails.start(self.config_data.period * 1000 * 60)
 
