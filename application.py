@@ -24,7 +24,8 @@ class App(QtWidgets.QApplication):
         self.email_count = 0
         self.old_emails = set()
         self.new_emails = set()
-        self.email_format_error = None
+        self.get_emails_error = None
+        self.conected_with_email = False
         self.timer_get_new_emails = QtCore.QTimer()
         self.timer_get_new_emails.setSingleShot(False)
         self.timer_get_new_emails.timeout.connect(self._get_emails)
@@ -38,8 +39,12 @@ class App(QtWidgets.QApplication):
         self.run_flananini()
 
     def _check_new_emails(self):
-        if self.email_format_error:
-            self.gui.text_log.append(self.email_format_error)
+        if self.get_emails_error:
+            self.conected_with_email = False
+            self.gui.text_log.append(self.get_emails_error)
+        elif not self.conected_with_email:
+            self.conected_with_email = True
+            self.gui.text_log.append('Conectado con éxito con la cuenta de email.')
 
         my_emails = {email for email in self.new_emails if email.from_.lower() in self.config_data.emails_to_check}
 
@@ -72,14 +77,19 @@ class App(QtWidgets.QApplication):
 
     def _get_emails(self):
         def get_emails():
+            self.get_emails_error = None
             imap = imaplib.IMAP4_SSL('imap.outlook.com')
-            imap.login(self.config_data.email_name, self.config_data.email_pass)
+            try:
+                imap.login(self.config_data.email_name, self.config_data.email_pass)
+            except (AttributeError, imaplib.IMAP4.error) as e:
+                self.get_emails_error = 'Error: no se pudo conectar con la cuenta de email.'
+                self.signal_new_emails_obtained.emit()
+                return
 
             status, n_messages = imap.select('INBOX')
 
             n_messages = int(n_messages[0])
             my_emails: set[MyEmail] = set()
-            self.email_format_error = None
             for id_ in range(n_messages, n_messages - self.config_data.n_emails, -1):
                 res, msg = imap.fetch(str(id_), '(RFC822)')
                 for response in msg:
@@ -92,7 +102,7 @@ class App(QtWidgets.QApplication):
                     try:
                         my_email.from_ = msg['From'].split('<')[1].split('>')[0]
                     except:
-                        self.email_format_error = 'Error: "from" no tiene el formato "<direccion>"'
+                        self.get_emails_error = 'Error: "from" no tiene el formato "<direccion>"'
 
                     for part in msg.walk():
                         if part.get_content_type() == 'text/plain':
@@ -144,7 +154,7 @@ class App(QtWidgets.QApplication):
             self.gui.text_log.append('Conectado con éxito con telegram.')
             self.email_count = 0
 
-        except RuntimeError:
+        except (RuntimeError, ValueError):
             self.telegram_client_connected = False
             self.gui.text_log.append('Sin conectar con telegram. Modo solo alarma.')
         except Exception as e:

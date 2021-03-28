@@ -6,6 +6,15 @@ from controllers import c_main
 from ui_loader import load_ui
 
 
+class MenuTextEdit(QtWidgets.QTextEdit):
+    def contextMenuEvent(self, e: QtGui.QContextMenuEvent) -> None:
+        menu = QtWidgets.QMenu()
+        action = QtWidgets.QAction('Limpiar registro')
+        menu.addAction(action)
+        if menu.exec_(e.globalPos()) == action:
+            self.clear()
+
+
 class AppMainWindow(QtWidgets.QMainWindow):
     label_log: QtWidgets.QLabel
 
@@ -18,7 +27,7 @@ class AppMainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super().__init__()
-        load_ui('uis/main.ui', self)
+        load_ui('uis/main.ui', self, [MenuTextEdit])
         self._setup_view()
 
     def _setup_view(self):

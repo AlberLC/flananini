@@ -132,7 +132,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QTextEdit" name="text_log">
+       <widget class="MenuTextEdit" name="text_log">
         <property name="font">
          <font>
           <pointsize>11</pointsize>
@@ -148,6 +148,13 @@
    </layout>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MenuTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>menutextedit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
