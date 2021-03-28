@@ -47,6 +47,7 @@ If you do not connect correctly with telegram, the application will only have th
 
 The alarm will only sound if the checkbox is activated. When it sounds, you can turn off the sound that time by pressing the bottom button in the main view.
 
+By default the alarm will be a series of beeps. You can customize it by replacing `resources/alarm.mp3` with your favorite alarm.
+
 ## License
 Distributed under the MIT License. See [LICENSE](https://github.com/AlberLC/flananini/blob/main/LICENSE) for more information.
-pue
