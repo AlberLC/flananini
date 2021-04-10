@@ -162,3 +162,6 @@ private.key
 *.session-journal
 config.json
 tel_id.txt
+
+# Docs images
+docs
