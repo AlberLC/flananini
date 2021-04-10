@@ -69,7 +69,7 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+readme_files/_build/
 
 # PyBuilder
 .pybuilder/
@@ -163,5 +163,5 @@ private.key
 config.json
 tel_id.txt
 
-# Docs images
-docs
+# Readme files
+readme_files
